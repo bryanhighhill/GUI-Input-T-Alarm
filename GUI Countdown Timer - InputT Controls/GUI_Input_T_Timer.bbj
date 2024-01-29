@@ -1,0 +1,14 @@
+sysgui = unt
+
+open (sysgui)"X0"
+bbj! = BBjAPI()
+sysgui! = bbj!.getSysGui()
+tc! = bbj!.getThinClient()
+
+title$ = "GUI Countdown Timer - Using InputT Controls"
+
+window! = sysgui!.addWindow(50,50,700,350,title$, $00010000$)
+
+window!.setCallback(window!.ON_CLOSE,"eoj")
+
+window!.setBackColor(sysgui!.makeColor(209, 255, 245))
