@@ -3,12 +3,54 @@ sysgui = unt
 open (sysgui)"X0"
 bbj! = BBjAPI()
 sysgui! = bbj!.getSysGui()
+sysgui!.setContext(0)
 tc! = bbj!.getThinClient()
 
 title$ = "GUI Countdown Timer - Using InputT Controls"
 
-window! = sysgui!.addWindow(50,50,700,350,title$, $00010000$)
-
+windowFlags! = $0001008B$
+window! = sysgui!.addWindow(50, 50, 700, 700, title$, windowFlags!)
 window!.setCallback(window!.ON_CLOSE,"eoj")
 
-window!.setBackColor(sysgui!.makeColor(209, 255, 245))
+REM black! = sysgui!.makeColor(0, 0, 0)
+REM window!.setBackColor(black!)
+
+REM 'set a timer button option. when clicked, opens up time picker'
+timerBtnId! = window!.getAvailableControlID()
+setTimerBtn! = window!.addButton(timerBtnId!, 300, 300, 300, 100, "Set a Timer")
+setTimerBtn!.setCallback(setTimerBtn!.ON_BUTTON_PUSH, "showTimerInput")
+
+
+REM 'fix: time picker reverts to normal input when window is resized, esc, or clicking outside of picker'
+
+REM alarmTime! = timeInput!.getValue()
+REM 
+REM if (alarmTime! > TIM) then i = msgbox(alarmTime!)
+
+
+process_events
+
+
+showTimerInput:
+    timeMask! = "%hz:%mz"
+    timeInputRules! = "##"
+    timeInputId! = window!.getAvailableControlID()
+    timeInput! = window!.addInputT(timeInputId!, 50, 50, 100, 50, $0020$, timeMask!)
+    REM timeInput!.setPlaceholder("00:00:00")
+    timeInput!.showTimePicker()
+    timeInput!.setEditable(0)
+    setTimerBtn!.setVisible(0)
+    selectedTime! = timeInput!.getValue()
+    
+REM     if (selectedTime! < TIM) then
+REM         i = msgbox("Select a time in the future")
+REM     endif
+    
+REM     toolBtnId! = window!.getAvailableControlID()
+REM     myToolButton! = window!.addToolButton(toolBtnId!, 100, 100, 50, 50, "Set Alarm", $0800$)
+REM     myToolButton!.setToggleable(1)
+return
+
+
+eoj:
+    release
